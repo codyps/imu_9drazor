@@ -1,4 +1,5 @@
 port: imu
+name: imu_9drazor
 publish:
  imu:
   type: imu_9drazor/RazorImu
