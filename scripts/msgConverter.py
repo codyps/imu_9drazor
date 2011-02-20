@@ -36,7 +36,8 @@ if __name__ == '__main__':
 											 0 , 0 ,   0.2]
 		
 	pub = rospy.Publisher('imu', Imu)
-	
+  
+	imu_frame = rospy.get_param("~frame_id", "base_link")
 	
 	def imuCB(rawMsg):
 		imuMsg.angular_velocity.x  = rawMsg.angular_velocity.x
@@ -53,7 +54,7 @@ if __name__ == '__main__':
 		imuMsg.orientation.z = q[2]
 		imuMsg.orientation.w = q[3]
 		imuMsg.header.stamp= rospy.Time.now()
-		imuMsg.header.frame_id = 'base_link'
+		imuMsg.header.frame_id = imu_frame
 
 		pub.publish(imuMsg)
 	
