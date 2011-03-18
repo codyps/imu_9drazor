@@ -1,23 +1,26 @@
 #include "WProgram.h"
 #include <stdio.h>
-#include "avrRos/Ros.h"
-#include "avrRos/ros_string.h".
-#include "avrRos/RazorImu.h"
+#include "avr_ros/ros.h"
+#include "avr_ros/string.h"
+#include "avr_ros/RazorImu.h"
 #include "SF9DOF_AHRS.h"
 
 
 imu_9drazor::RazorImu imu_msg;
 
-extern "C" void __cxa_pure_virtual()
-{
-  cli();
-  for (;;);
+namespace ros {
+	void byte_put(uint8_t c) {
+		Serial.write(c);
+	}
+
+	int byte_get(void) {
+		return Serial.read();
+	}
 }
 
-
-unsigned long pubTimer=0;
-void setup(){
-	initRos();
+unsigned long pubTimer = 0;
+void setup()
+{
 	setupIMU();
 	//set up the imu message
 
@@ -25,10 +28,10 @@ void setup(){
 	pubTimer = millis();
 }
 
-void loop(){
-	ros.spin();
+void loop()
+{
+	node.spin();
 	stepIMU();
-
 
 	if ( (millis() - pubTimer) >=20) {
 		imu_msg.angular_velocity.x = Gyro_Vector[0];
@@ -44,7 +47,7 @@ void loop(){
 		imu_msg.yaw = yaw;
 
 
-		ros.publish(0,&imu_msg);
+		node.publish(0,&imu_msg);
 		pubTimer = millis();
 	}
 
